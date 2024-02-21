@@ -8,4 +8,4 @@ This library provides tools for generating musical compositions, applying audio 
 from .core import Effect, InstrumentTrack, LyricsTrack, Song
 
 # Define the package version
-__version__ = "0.1.0"
+__version__ = "0.1.3"
