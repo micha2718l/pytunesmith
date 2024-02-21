@@ -1,12 +1,12 @@
 [tool.poetry]
 name = "pytunesmith"
-version = "0.1.0"
+version = "0.1.1"
 description = "PyTuneSmith: A Python library for creating and manipulating music."
 authors = ["micha2718l <micha2718l@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = "^3.10"
 pretty-midi = "^0.2.10"
 numpy = "^1.26.4"
 scipy = "^1.12.0"

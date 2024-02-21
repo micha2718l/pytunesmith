@@ -41,9 +41,11 @@ song.set_lyrics_track(lyrics_track)
 
 # Export the song to a WAV file
 song.export("hello_world_song.wav")
-Collaboration with an LLM
-PyTuneSmith is not just a library; it's a testament to the power of collaboration between humans and AI. A significant portion of this project was authored and constructed with the help of a Large Language Model (LLM), with guidance and direction provided by a human developer. This unique collaboration has allowed for the rapid development and refinement of the library, showcasing the potential of AI-assisted programming.
 ```
+
+## Collaboration with an LLM
+PyTuneSmith is not just a library; it's a testament to the power of collaboration between humans and AI. A significant portion of this project was authored and constructed with the help of a Large Language Model (LLM), with guidance and direction provided by a human developer. This unique collaboration has allowed for the rapid development and refinement of the library, showcasing the potential of AI-assisted programming.
+
 ## Contributing
 Contributions to PyTuneSmith are welcome! If you have ideas for new features, improvements, or bug fixes, feel free to open an issue or submit a pull request.
 
