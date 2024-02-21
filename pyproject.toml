@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pytunesmith"
-version = "0.1.1"
+version = "0.1.2"
 description = "PyTuneSmith: A Python library for creating and manipulating music."
 authors = ["micha2718l <micha2718l@gmail.com>"]
 readme = "README.md"
