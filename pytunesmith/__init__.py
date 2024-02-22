@@ -10,4 +10,4 @@ from .effects import ConvolutionEffect, GainEffect
 from .effects.effects_pack import EffectsPack
 
 # Define the package version
-__version__ = "0.1.3"
+__version__ = "0.1.4"
