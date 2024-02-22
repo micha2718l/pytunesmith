@@ -1,14 +1,19 @@
-import pytunesmith
+from pytunesmith import InstrumentTrack, LyricsTrack, Song
+from pytunesmith.effects import EffectsPack, ConvolutionEffect
+
 
 # Define the song structure
-song = pytunesmith.Song(tempo=120, sf2_path='TimGM6mb.sf2')
+song = Song(tempo=120, sf2_path='samples/TimGM6mb.sf2')
 
-# Define an echo effect with a longer impulse response
+# Use the prebuilt Echo effect from the EffectPack
+echo_effect = EffectsPack.Echo(delay=0.5, decay=0.6, fs=44100)
+
+# Define a specific echo effect with a longer impulse response
 echo_impulse_response = [1] + [0] * 2000 + [0.6] + [0] * 2000 + [0.3]
-echo_effect = pytunesmith.Effect('convolution', {'impulse_response': echo_impulse_response})
+echo_effect_custom = ConvolutionEffect(impulse_response = echo_impulse_response)
 
 # Add a piano track with a melody and the echo effect
-piano_track = pytunesmith.InstrumentTrack(
+piano_track = InstrumentTrack(
     name="Acoustic Grand Piano",
     melody=[
         ('C4', 0, 1), ('E4', 1, 2), ('G4', 2, 3), ('C5', 3, 5),
@@ -19,7 +24,7 @@ piano_track = pytunesmith.InstrumentTrack(
 song.add_instrument_track(piano_track)
 
 # Add a violin track with a different melody
-violin_track = pytunesmith.InstrumentTrack(
+violin_track = InstrumentTrack(
     name="Violin",
     melody=[
         ('G4', 0, 2), ('E5', 2, 4),
@@ -28,18 +33,28 @@ violin_track = pytunesmith.InstrumentTrack(
 )
 song.add_instrument_track(violin_track)
 
-# Add lyrics with varying speeds and the echo effect
-lyrics_track = pytunesmith.LyricsTrack(
+# Add lyrics with varying speeds and the standard echo effect
+helloWorld_track = LyricsTrack(
     lyrics=[
         ("Hello", 1.5, 0.6),
-        ("world", 3, 0.4),
+        ("world", 3, 0.4)
+    ],
+    effects=[echo_effect]
+)
+
+song.add_lyrics_track(helloWorld_track)
+
+# Add lyrics with varying speeds and the custom echo effect
+thisIsMusic_track = LyricsTrack(
+    lyrics=[
         ("this", 4.5, 0.7),
         ("is", 5, 0.5),
         ("music", 6, 0.3)
     ],
-    effects=[echo_effect]
+    effects=[echo_effect_custom]
 )
-song.set_lyrics_track(lyrics_track)
 
+song.add_lyrics_track(thisIsMusic_track)
+print('saving')
 # Export the song to a WAV file
 song.export("hello_world_song.wav")

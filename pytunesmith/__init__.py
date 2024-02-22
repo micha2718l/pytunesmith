@@ -6,6 +6,8 @@ This library provides tools for generating musical compositions, applying audio 
 
 # Import the core functionality into the package namespace
 from .core import Effect, InstrumentTrack, LyricsTrack, Song
+from .effects import ConvolutionEffect, GainEffect
+from .effects.effects_pack import EffectsPack
 
 # Define the package version
 __version__ = "0.1.3"

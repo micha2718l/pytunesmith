@@ -6,20 +6,10 @@ from pydub import AudioSegment
 import os
 
 class Effect:
-    """A class representing an audio effect."""
-    def __init__(self, name: str, parameters: dict = None):
-        self.name = name
-        self.parameters = parameters or {}
-
-    def apply(self, audio: np.ndarray, fs: int) -> np.ndarray:
+    """Base class for audio effects."""
+    def apply(self, audio, fs):
         """Apply the effect to the audio."""
-        if self.name == 'convolution':
-            impulse_response = self.parameters.get('impulse_response', np.ones(1))
-            return np.convolve(audio, impulse_response, mode='same')
-        elif self.name == 'gain':
-            gain = self.parameters.get('gain', 1)
-            return audio * gain
-        return audio
+        raise NotImplementedError("This method should be implemented by subclasses.")
 
 class InstrumentTrack:
     """A class representing a musical instrument track."""
@@ -82,25 +72,31 @@ class Song:
     def __init__(self, tempo: int = 120, sf2_path: str = None):
         self.tempo = tempo
         self.instrument_tracks = []
-        self.lyrics_track = None
+        self.lyrics_tracks = []
         self.sf2_path = sf2_path
 
     def add_instrument_track(self, instrument_track: InstrumentTrack):
         """Add an instrument track to the song."""
         self.instrument_tracks.append(instrument_track)
 
-    def set_lyrics_track(self, lyrics_track: LyricsTrack):
+    def add_lyrics_track(self, lyrics_track: LyricsTrack):
         """Set the lyrics track for the song."""
-        self.lyrics_track = lyrics_track
+        self.lyrics_tracks.append(lyrics_track)
 
     def export(self, filename: str, fs: int = 44100):
         """Export the song to a WAV file."""
         midi_data = pretty_midi.PrettyMIDI(initial_tempo=self.tempo)
         instrument_audios = [track.synthesize(midi_data, fs, self.sf2_path) for track in self.instrument_tracks]
-        midi_audio =np.sum(instrument_audios, axis=0)
+        midi_audio = np.sum(instrument_audios, axis=0)
         midi_audio /= np.max(np.abs(midi_audio))  # Normalize
 
-        lyrics_audio = self.lyrics_track.synthesize(fs) if self.lyrics_track else np.zeros_like(midi_audio)
+        if self.lyrics_tracks:
+            max_length = max(len(track.synthesize(fs)) for track in self.lyrics_tracks)
+            lyrics_audios = [np.pad(track.synthesize(fs), (0, max_length - len(track.synthesize(fs))), mode='constant') for track in self.lyrics_tracks]
+            lyrics_audio = np.sum(lyrics_audios, axis=0)
+            lyrics_audio /= np.max(np.abs(lyrics_audio))  # Normalize
+        else:
+            lyrics_audio = np.zeros_like(midi_audio)
 
         # Ensure both arrays are of the same length
         max_length = max(len(midi_audio), len(lyrics_audio))
@@ -112,3 +108,4 @@ class Song:
 
         mixed_audio_int16 = (mixed_audio * 32767).astype(np.int16)
         wav_write(filename, fs, mixed_audio_int16)
+
